@@ -40,6 +40,12 @@
       <UniqueIdentifier>{133b5350-744c-4417-8892-0df5578ace47}</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
     </Filter>
+    <Filter Include="Source Files\Spider">
+      <UniqueIdentifier>{3793b23f-5c15-47f2-b838-fd646cccb018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Spider">
+      <UniqueIdentifier>{28ac35f5-bcd3-4b2a-a4dd-c2dd7e491212}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="curve.cpp">
@@ -98,6 +104,42 @@
     </ClCompile>
     <ClCompile Include="rulerwindow.cpp">
       <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="canon.cpp">
+      <Filter>Source Files\Spider</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Source Files\Spider</Filter>
+    </ClCompile>
+    <ClCompile Include="Hand.cpp">
+      <Filter>Source Files\Spider</Filter>
+    </ClCompile>
+    <ClCompile Include="Head.cpp">
+      <Filter>Source Files\Spider</Filter>
+    </ClCompile>
+    <ClCompile Include="Joint.cpp">
+      <Filter>Source Files\Spider</Filter>
+    </ClCompile>
+    <ClCompile Include="LowerLeg.cpp">
+      <Filter>Source Files\Spider</Filter>
+    </ClCompile>
+    <ClCompile Include="MetaBall.cpp">
+      <Filter>Source Files\Spider</Filter>
+    </ClCompile>
+    <ClCompile Include="Spider.cpp">
+      <Filter>Source Files\Spider</Filter>
+    </ClCompile>
+    <ClCompile Include="SpiderModel.cpp">
+      <Filter>Source Files\Spider</Filter>
+    </ClCompile>
+    <ClCompile Include="Tentacle.cpp">
+      <Filter>Source Files\Spider</Filter>
+    </ClCompile>
+    <ClCompile Include="Torus.cpp">
+      <Filter>Source Files\Spider</Filter>
+    </ClCompile>
+    <ClCompile Include="UpperLeg.cpp">
+      <Filter>Source Files\Spider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +202,42 @@
     </ClInclude>
     <ClInclude Include="vec.h">
       <Filter>Header Files\Math.</Filter>
+    </ClInclude>
+    <ClInclude Include="canon.h">
+      <Filter>Header Files\Spider</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Header Files\Spider</Filter>
+    </ClInclude>
+    <ClInclude Include="Hand.h">
+      <Filter>Header Files\Spider</Filter>
+    </ClInclude>
+    <ClInclude Include="Joint.h">
+      <Filter>Header Files\Spider</Filter>
+    </ClInclude>
+    <ClInclude Include="LowerLeg.h">
+      <Filter>Header Files\Spider</Filter>
+    </ClInclude>
+    <ClInclude Include="MetaBall.h">
+      <Filter>Header Files\Spider</Filter>
+    </ClInclude>
+    <ClInclude Include="Spider.h">
+      <Filter>Header Files\Spider</Filter>
+    </ClInclude>
+    <ClInclude Include="SpiderModel.h">
+      <Filter>Header Files\Spider</Filter>
+    </ClInclude>
+    <ClInclude Include="Tentacle.h">
+      <Filter>Header Files\Spider</Filter>
+    </ClInclude>
+    <ClInclude Include="Torus.h">
+      <Filter>Header Files\Spider</Filter>
+    </ClInclude>
+    <ClInclude Include="UpperLeg.h">
+      <Filter>Header Files\Spider</Filter>
+    </ClInclude>
+    <ClInclude Include="modelerglobals.h">
+      <Filter>Header Files\Model.</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
