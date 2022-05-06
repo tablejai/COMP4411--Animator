@@ -6,6 +6,7 @@ typedef enum {
 	HAND,
 	HEAD,
 	METABALL,
+	LEGP,
 	NUMTYPE
 }Type;
 struct Component {

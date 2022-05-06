@@ -3,25 +3,36 @@
 #include "bitmap.h"
 #include "modelerapp.h"
 #include "particleSystem.h"
+#include <chrono>
 
+using namespace std::chrono;
 #include <FL/Fl.H>
 #include <FL/Fl_Gl_Window.h>
+#include <time.h>
+
 #include <FL/gl.h>
 #include <GL/glu.h>
 #include <cstdio>
-
+//my_duration test1 = std::chrono::milliseconds(1);//Forbidden
 static const int	kMouseRotationButton			= FL_LEFT_MOUSE;
 static const int	kMouseTranslationButton			= FL_MIDDLE_MOUSE;
 static const int	kMouseZoomButton				= FL_RIGHT_MOUSE;
 
 static const char *bmp_name = NULL;
-
+static int countNum = 0;
+static ModelerView* currModel;
 ModelerView::ModelerView(int x, int y, int w, int h, char *label)
 : Fl_Gl_Window(x,y,w,h,label), t(0), save_bmp(false) 
 {
 	m_ctrl_camera = new Camera();
 	m_curve_camera = new Camera();
+	prevTime = milliseconds(0);
+	jump = false;
 	camera(CURVE_MODE);
+	callback1(nullptr);
+	currModel = this;
+
+
 }
 
 ModelerView::~ModelerView()
@@ -29,15 +40,37 @@ ModelerView::~ModelerView()
 	delete m_ctrl_camera;
 	delete m_curve_camera;
 }
+
+void ModelerView :: callback1(void* c) {
+	//cout<<("TICK\n")<< countNum++;
+	if(currModel!=nullptr)
+	currModel->redraw();
+	Fl::repeat_timeout(0.0001, (callback1));    // retrigger timeout
+}
 int ModelerView::handle(int event)
-{
-    unsigned eventCoordX = Fl::event_x();
+{ //mouse event
+	unsigned eventCoordX = Fl::event_x();
 	unsigned eventCoordY = Fl::event_y();
 	unsigned eventButton = Fl::event_button();
 	unsigned eventState  = Fl::event_state();
 
 	switch(event)	 
 	{
+	case FL_KEYDOWN: {
+		//if(mui!=nullptr)
+	//	mui->animate(true);
+		jump = true;
+		redraw();
+		break;
+	}
+	case FL_KEYUP: {
+		//if(mui!=nullptr)
+		//	mui->animate(true);
+		jump = false;
+		redraw();
+
+		break;
+	}
 	case FL_PUSH:
 		{
 			switch(eventButton)

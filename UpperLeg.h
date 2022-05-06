@@ -1,3 +1,4 @@
+#pragma once
 #include "modelerview.h"
 #include "modelerapp.h"
 #include "modelerdraw.h"

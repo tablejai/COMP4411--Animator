@@ -21,10 +21,21 @@ using namespace std;
 	thetaxOff = 0;
 	thetayOff = 0;
 	thetazOff = 0;
+	forcePoint.push_back(Vec3f{ (float)x,(float)y,(float)z });
+	motion = { 0,0,0 };
 
 }
 
+ void Head::gravity(double dt) {
+	 cout <<"ypos"<< y <<"<"<< dt << "<" << gF<<"<"<< motion[2] <<endl;
+	 motion[2] -= dt/1000.0 * gF;
+	 if (y<=floory) {
+		 motion[2] = 0;
+		 return;
+	 }
+	 y += motion[2];
 
+ }
 
 
 void  Head::draw()

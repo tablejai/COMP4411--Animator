@@ -1,3 +1,4 @@
+#pragma once
 #include "modelerview.h"
 #include "modelerapp.h"
 #include "modelerdraw.h"
@@ -10,7 +11,7 @@
 #include "global.h"
 #include <vector>
 #include <algorithm>
-
+#include "vec.h"
 struct Head : public Component
 {
     //float x;
@@ -28,8 +29,14 @@ struct Head : public Component
     float length;
     float width;
     float height;
+	int floory;
+	double gF;
+	Vec3f motion;
+	int mass;
     Head(int x, int y, int z, float r, float L,float H, char* label);
     Joint* joint;
     std::vector<MetaBall*> metaballs;
+	std::vector<Vec3f> forcePoint;
+	void gravity(double dt);
     virtual void draw();
 };

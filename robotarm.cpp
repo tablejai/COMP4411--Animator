@@ -7,6 +7,7 @@
 #include <FL/gl.h>
 #include "SpiderModel.h"
 #include "modelerglobals.h"
+#include "BallBat.h"
 
 // To make a SampleModel, we inherit off of ModelerView
 class SampleModel : public ModelerView
@@ -24,6 +25,7 @@ ModelerView* createSampleModel(int x, int y, int w, int h, char* label)
 {
 	return new SampleModel(x, y, w, h, label);
 }
+
 Spider* spider;
 ModelerView* createSpiderModel(int x, int y, int w, int h, char* label)
 {
@@ -110,6 +112,7 @@ int main()
 	controls[TENTACLE_Z_TAR] = ModelerControl("Tentacle Z Position", -5.0, 5, 1.0f, 0);
 	controls[TENTACLE_ANG_CONSTRAINT] = ModelerControl("Tentacle Angle Constraint", -135, 135, 1.0f, 0);
 	controls[LEVEL_OF_DETAIL] = ModelerControl("Level of Detail", 0, 5, 0.01f, 5);
+	controls[Physically_Based_Animation] = ModelerControl("Physically_Character", 0.0f, 1.0f, 1.0f, 1.0f);
 
 
 

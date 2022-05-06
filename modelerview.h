@@ -8,11 +8,13 @@
 
 #ifndef MODELERVIEW_H
 #define MODELERVIEW_H
-
+#include <chrono>
+using namespace std::chrono;
 #include <FL/Fl_Gl_Window.H>
-
+//#include "modelerui.h"
 class Camera;
 class ModelerView;
+//class ModelerUI;
 typedef ModelerView* (*ModelerViewCreator_f)(int x, int y, int w, int h, char *label);
 
 typedef enum { CTRL_MODE, CURVE_MODE } cam_mode_t;
@@ -20,12 +22,14 @@ typedef enum { CTRL_MODE, CURVE_MODE } cam_mode_t;
 class ModelerView : public Fl_Gl_Window
 {
 public:
-    ModelerView(int x, int y, int w, int h, char *label=0);
+	//ModelerUI * mui;
 
+    ModelerView(int x, int y, int w, int h, char *label=0);
+	static void callback1(void*);
 	virtual ~ModelerView();
     virtual int handle(int event);
     virtual void draw();
-
+	bool jump;
 	void setBMP(const char *fname);
 	void saveBMP(const char* szFileName);
 	void endDraw();
@@ -34,7 +38,10 @@ public:
     Camera *m_camera;
 	Camera *m_ctrl_camera;
 	Camera *m_curve_camera;
-
+	milliseconds prevTime;
+	double prevy;
+	
+	
 	float t;
 	void update();
 	bool save_bmp;

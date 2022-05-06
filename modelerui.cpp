@@ -556,7 +556,7 @@ void ModelerUI::cb_timed(void *p)
 
 	if (!pui->m_bAnimating) 
 		return;
-
+	cout << "Hello World"<< pui->m_pbtLoop->value() << endl;
 	// update UI
 	float dt = 1.0 / (float)pui->m_iFps;
 	float t = pui->m_pwndGraphWidget->currTime();
@@ -874,6 +874,7 @@ m_iFps(30),
 m_bAnimating(false),
 m_bSaveMovie(false)
 {
+	// this->m_pwndModelerView->mui = this;
 	// setup all the callback functions...
 	m_pmiOpenAniScript->callback((Fl_Callback*)cb_openAniScript);
 	m_pmiSaveAniScript->callback((Fl_Callback*)cb_saveAniScript);

@@ -46,6 +46,12 @@
     <Filter Include="Header Files\Spider">
       <UniqueIdentifier>{28ac35f5-bcd3-4b2a-a4dd-c2dd7e491212}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Physics">
+      <UniqueIdentifier>{7dba6b32-008e-4d59-9e9f-d25f63a79de6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Physics">
+      <UniqueIdentifier>{39109044-50e8-49bb-b6db-f80ce2e7e9a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="curve.cpp">
@@ -140,6 +146,15 @@
     </ClCompile>
     <ClCompile Include="UpperLeg.cpp">
       <Filter>Source Files\Spider</Filter>
+    </ClCompile>
+    <ClCompile Include="BallBat.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Groud.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="LegPhysics.cpp">
+      <Filter>Source Files\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -238,6 +253,15 @@
     </ClInclude>
     <ClInclude Include="modelerglobals.h">
       <Filter>Header Files\Model.</Filter>
+    </ClInclude>
+    <ClInclude Include="BallBat.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Ground.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="LegPhysics.h">
+      <Filter>Header Files\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
