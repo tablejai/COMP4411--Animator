@@ -61,8 +61,6 @@ Vec3f LegPhysics::collisionStartWithFloor(Vec3f netforce) {
 	if (startpoint[1]<=floory) {
 		netforce[1] -= force[1];
 		torque += (double)force[1] * sin(TORADIAN(90-thetax));
-	if(parent==nullptr)
-		netforce = balancedTorque(netforce);
 
 	}
 
