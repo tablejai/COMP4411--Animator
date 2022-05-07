@@ -73,20 +73,28 @@ BallBat::BallBat(int x, int y, int z, int w, int h, int L, ModelerView * view) :
 	float lg_xoffset = 0.82;
 	float lg_zoffset = 0.88;
 	prevTime = milliseconds(0);
-	lp = new LegPhysics(x, y+3, z, 0.1,2.0f, nullptr);
-	lpg = new LegPhysics(lp->endpoint[0], lp->endpoint[1], lp->endpoint[2], 0.1, 2, nullptr);
-	lpg2 = new LegPhysics(lpg->endpoint[0], lpg->endpoint[1], lpg->endpoint[2], 0.1, 1.0, nullptr);
 
+
+	lp = new LegPhysics(x+1, y+3, z, 0.1,2.0f, nullptr);
+	lpg = new LegPhysics(lp->endpoint[0], lp->endpoint[1], lp->endpoint[2], 0.1, 2, nullptr);
+	lp2 = new LegPhysics(x, y + 5, z+1, 0.1, 2.0f, nullptr);
+	lpg2 = new LegPhysics(lp2->endpoint[0], lp2->endpoint[1], lp2->endpoint[2], 0.1, 2, nullptr);
+	h1 = new Head(lp->endpoint[0], lp->endpoint[1], lp->endpoint[2],1,1,1,nullptr);
+	h2 = new Head(lp2->endpoint[0], lp2->endpoint[1], lp2->endpoint[2],1, 1, 1, nullptr);
 	lp->nextleg = lpg;
 	lp->thetax = -45;
 	lp->mass = 20.0;
+	lp2->nextleg = lpg;
+	lp2->thetax = -45;
+	lp2->mass = 20.0;
+	lpg2->parent = lp2;
+	lpg2->mass = 20;
+	lpg2->thetax = -100;
 	lpg->parent = lp;
-	lpg2->parent = lpg;
 	lpg->mass = 20.0;
 	lpg->thetax = -100;
 
 	floory = y - 2;
-
 	grd = new Ground(x-40, floory, z-40 , 80,0.1,80,view);
 	// tentacle3 = new Tentacle(tentacle2,tentacle2->end, 0.3, 2);
 	this->view = view;
@@ -118,10 +126,20 @@ BallBat::BallBat(int x, int y, int z, int w, int h, int L, ModelerView * view) :
 	lp->kd = 540.0f;
 	lp->targetuplift = 45;
 	lpg->targetuplift = 65;
+	lp2->gF = 0.1;
+	lpg2->gF = 0.1;
+	lpg2->kp = 0.37f;
+	lpg2->kd = 200;
 
+	lp2->kp = 1.3f;
+	lp2->kd = 540.0f;
+	lp2->targetuplift = 45;
+	lpg2->targetuplift = 65;
+
+	lpg2->floory = floory;
+	lp2->floory = floory;
 	lpg->floory = floory;
 	lp->floory = floory;
-	 
 }
 
 
@@ -136,29 +154,32 @@ milliseconds ms = duration_cast< milliseconds >(
 	);
 prevTime = ms;
 }
-void BallBat::leanforward() {
+void BallBat::leanforward(LegPhysics*lp, LegPhysics*lpg) {
 	//if (!leanded) {
+	if (lp->collideFloor) {
 		lp->torque = 0.0001f;
 		lpg->torque = 0.1f;
-		
-		lp->targetuplift = 40;
-		lpg->targetuplift =70;
 
+		lp->targetuplift = 50;
+		lpg->targetuplift = 70;
+	}
 	//	leanded = true;
 	//}
 }
-void BallBat::leanbackward() {
+void BallBat::leanbackward(LegPhysics*lp, LegPhysics*lpg) {
 	//if (!leanded) {
-	lp->torque = -0.0001f;
-	lpg->torque = -0.3f;
+	if (lp->collideFloor) {
 
-	//lp->targetuplift = 60;
-	lpg->targetuplift = 50;
+		lp->torque = -0.0001f;
+		lpg->torque = -0.3f;
 
+		//lp->targetuplift = 60;
+		lpg->targetuplift = 50;
+	}
 	//	leanded = true;
 	//}
 }
-void BallBat::leanStraight() {
+void BallBat::leanStraight(LegPhysics*lp, LegPhysics*lpg) {
 	if (lp->thetax <-70) {
 		lp->torque += 6.0f;
 	}
@@ -172,33 +193,31 @@ void BallBat::leanStraight() {
 	leanded = false;
 
 }
-void BallBat::jumpAction() {
-	 if(!jumped &&  view->leanb){
-		if (lp->collideFloor) {
-			lp->torque -= 170;
-			lpg->torque += 20;
-			lp->targetuplift = (lp->targetuplift + 10);
-			lpg->targetuplift = (lpg->targetuplift + 7);
+void BallBat::jumpAction(LegPhysics*lpin,LegPhysics*lping) {
+	 if( view->leanb){
+		if (lpin->collideFloor) {
+			lpin->torque -= 170;
+			lping->torque += 20;
+			lpin->targetuplift = (lpin->targetuplift + 18);
+			lping->targetuplift = (lping->targetuplift + 7);
 		}
-		//lp->targetuplift = lp->targetuplift+3;
-		//lpg->targetuplift = lpg->targetuplift + 30;
-		jumped = true;
+		//lpin->targetuplift = lpin->targetuplift+3;
+		//lping->targetuplift = lping->targetuplift + 30;
 	}
-	else if(!jumped) {
-		/*if (lp->collideFloor) {
-		lp->torque -= 2.6f;
-		lpg->torque +=2.6f;
-		}*/
-		if (lp->collideFloor) {
-			lp->torque -= 100.6f;
-			lpg->torque += 95.6f;
-			lp->targetuplift = min(lp->targetuplift + 10, 90);
-			lpg->targetuplift = min(lpg->targetuplift + 10, 90);
-		}
-		//lp->targetuplift = lp->targetuplift+3;
-		//lpg->targetuplift = lpg->targetuplift + 30;
-		jumped = true;
-	}
+	 else if (!jumped) {
+		 cout << "jping" << endl;
+
+		 if (lpin->collideFloor) {
+			 if (lpin->thetax >= -45)
+				 lpin->torque -= 90;
+				 lping->torque += 101.6f;
+			 lpin->targetuplift = min(lpin->targetuplift + 10, 90);
+			 lping->targetuplift = min(lping->targetuplift + 10, 90);
+
+			 //lpin->targetuplift = lpin->targetuplift+3;
+			 //lping->targetuplift = lping->targetuplift + 30;
+		 }
+	 }
 	
 }
 void BallBat::calCgVelocity(double dt) {
@@ -207,7 +226,13 @@ void BallBat::calCgVelocity(double dt) {
 	//cout << "diffy" << v[1] << endl;
 
 }
-void BallBat::porjection(double dt) {
+void BallBat::calCgVelocity2(double dt) {
+	v2 = (cg2 - prevCg2);
+	v2 *= (1 / dt);
+	//cout << "diffy" << v[1] << endl;
+
+}
+void BallBat::porjection(LegPhysics*lp, LegPhysics*lpg,double dt) {
 	project = true;
 	cg = cg + v * dt;
 	//lp->motion[0] = v[0] * dt;
@@ -217,19 +242,29 @@ void BallBat::porjection(double dt) {
 
 
 }
-void BallBat::airMotion(double dt) {
+void BallBat::projection2( double dt) {
+	project2 = true;
+	cg2= cg2 + v2 * dt;
+	//lp->motion[0] = v[0] * dt;
+	lp2->motion[1] = v2[1] * dt;
+}
+void BallBat::airMotion(LegPhysics*lp, LegPhysics*lpg,double dt) {
 	lp->motion[0] = v[0] * dt;
-	lp->motion[2] = v[2] * dt;
+	lp->motion[2] = v[2] * dt;	
+
 
 }
-void BallBat::endproject() {
-	lp->motion[0] = 0;
-	//lp->motion[1] = 0;
-	lp->motion[2] = 0;
-	project = false;
+void BallBat::endproject(LegPhysics*l,LegPhysics*lg) {
+	l->motion[0] = 0;
+	//l->motion[1] = 0;
+	l->motion[2] = 0;	
+	if(l==lp)
+		project = false;
+	else 
+		project2 = false;
 }
 void BallBat::gravity(double dt) {
-	//v[1] -= 0.1*dt;
+	//v[1] -= 0.1*dt; 
 }
 
 void BallBat::draw()
@@ -252,8 +287,13 @@ void BallBat::draw()
 	lp->netforce = { 0,0,0 };
 	lp->torque = 0;
 	lpg->netforce = { 0,0,0 };
-	lpg->torque = 0;
+	lpg->torque = 0;	lp2->netforce = { 0,0,0 };
+	lp2->torque = 0;
+	lpg2->netforce = { 0,0,0 };
+	lpg2->torque = 0;
 	cg = lpg->endpoint;
+	cg2 = lpg2->endpoint;
+	
 	glLightfv(GL_LIGHT2, GL_POSITION, lightPosition0);
 	glLightfv(GL_LIGHT2, GL_DIFFUSE, lightPosition0);
 	setAmbientColor(.1f, .1f, .1f);
@@ -267,17 +307,29 @@ void BallBat::draw()
 	glPushMatrix();
 	glRotatef(thetaz + thetazOff, 0, 0, 1);
 	glPushMatrix();
-	if (view->leanf) {
-		leanforward();
+	if (view->leanf  ) {
+	
+		leanforward(lp,lpg);
+
+		leanforward(lp2, lpg2);
+
 	}
 	else if (view->leanb) {
-		leanbackward();
+		leanbackward(lp,lpg);
+
+		leanbackward(lp2, lpg2);
 	}
 	else {
-		leanStraight();
+		leanStraight(lp, lpg);
+		leanStraight(lp2, lpg2);
+
 	}
 	if (view->jump) {
-		jumpAction();
+		if (!jumped) {
+			jumpAction(lp, lpg);
+			jumpAction(lp2, lpg2);
+			jumped = true;
+		}
 	}
 	else {
 		jumped = false;
@@ -285,37 +337,70 @@ void BallBat::draw()
 	//cout << "dd1" << lp->collideFloor << endl;
 	if(lp->collideFloor)
 	calCgVelocity(dt.count() / 1000.0);
-	if (lp->collideFloor && project) {
-		endproject();
+	if ((lp->collideFloor||lp->thetax>0) && project) {
+		endproject(lp,lpg);
 	}
 	else {
 		if (!lp->collideFloor&&project) {
-			airMotion(dt.count() / 1000.0f);
+			airMotion(lp, lpg,dt.count() / 1000.0f);
 		}
 		if (abs(lp->omegaX) < 0.016 &&lp->collideFloor&&view->jump ) {
-			porjection(dt.count() / 1000.0);
+			porjection(lp, lpg,dt.count() / 1000.0);
 			//jumped = true;
 
 			//	cout << "reach"<<lp->collideFloor << endl;
 		}
 	}
-	if (!lp->collideFloor) {
-		gravity(dt.count() / 1000.0);
 
-	}
+	if (lp2->collideFloor)
+		calCgVelocity2(dt.count() / 1000.0);
+	if ((lp2->collideFloor || lp2->thetax>0) && project2) {
+			endproject(lp2, lpg2);
+		}
+		else {
+			if (!lp2->collideFloor&&project2) {
+				airMotion(lp2, lpg2, dt.count() / 1000.0f);
+			}
+			if (abs(lp2->omegaX) < 0.016 &&lp2->collideFloor&&view->jump) {
+				projection2( dt.count() / 1000.0);
+				//jumped = true;
+
+				//	cout << "reach"<<lp->collideFloor << endl;
+			}
+		}
+	
 
 	//cout<<"dd" << lp->collideFloor << endl;
 	lp->gravity(dt.count());
 	lp->updateMotion(dt.count() / 1000.0);
+	lp->standUpWhenFall();
 	lp->draw();
+	
 	lp->updateRotation(dt.count());
 	lpg->gravity(dt.count());
 
 	lpg->draw();
 	lpg->updateRotation(dt.count());
+	lp2->gravity(dt.count());
+	lp2->updateMotion(dt.count() / 1000.0);
+	lp2->standUpWhenFall();
+	lp2->draw();
+	
+	lp2->updateRotation(dt.count());
+	lpg2->gravity(dt.count());
+
 	lpg2->draw();
+	lpg2->updateRotation(dt.count());
 	grd->draw();
-	cout << lp->motion[1] << "motion[1]" << endl;
+	//h1->x = lpg->endpoint[0];
+	//h1->y = lpg->endpoint[1];
+	//h1->z = lpg->endpoint[2];
+	//h2->x = lpg2->endpoint[0];
+	//h2->y = lpg2->endpoint[1];
+	//h2->z = lpg2->endpoint[2];
+	//h1->draw();
+	//h2->draw();
+	//cout << lp->motion[1] << "motion[1]" << endl;
 	//TestComp(canon);
 	glPopMatrix();
 
@@ -324,4 +409,5 @@ void BallBat::draw()
 	glPopMatrix();
 	glPopMatrix();
 	prevCg = cg;
+	prevCg2 = cg2;
 }

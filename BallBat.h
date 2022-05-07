@@ -24,6 +24,7 @@ struct BallBat :Component
 
 	ModelerView* view;
 	bool project;
+	bool project2;
 	//body parts
 	int w;
 	int h;
@@ -32,6 +33,9 @@ struct BallBat :Component
 	double oldx;
 	double oldy;
 	double oldz;
+	Head* h1;
+	Head* h2;
+
 	UpperLeg* ulu_Leg;
 	UpperLeg* uld_Leg;
 	UpperLeg* uru_Leg;
@@ -47,24 +51,33 @@ struct BallBat :Component
 	Ground *grd;
 	LegPhysics*lp;
 	LegPhysics*lpg;
+	LegPhysics* lp2;
 	LegPhysics*lpg2;
 	Vec3f cg;
 	Vec3f prevCg;
+	Vec3f cg2;
+	Vec3f prevCg2;
+	Vec3f v2;
 	Vec3f v;
 	bool jumped;
 	bool leanded;
 	milliseconds prevTime;
 	void calCgVelocity(double dt);
 	void jumpAction();
-	void leanforward();
-	void leanStraight();
-	void porjection(double dt);
-	void endproject( );
-	void airMotion(double dt);
-	void leanbackward();
+	//void leanforward(LegPhysics*lp, LegPhysics*lpg);
+	void leanStraight(LegPhysics*lp, LegPhysics*lpg);
+	void porjection(LegPhysics*lg, LegPhysics*lpg, double dt);
+	void projection2(double dt);
+	void endproject(LegPhysics*lg, LegPhysics*lpg);
+	void airMotion(LegPhysics*lg, LegPhysics*lpg, double dt);
+	void leanbackward(LegPhysics*lp, LegPhysics*lpg);
 	void gravity(double dt);
+	void jumpAction(LegPhysics*lp, LegPhysics*lpg);
+
 	virtual void draw();
 	void setup();
+	void leanforward(LegPhysics*lp, LegPhysics*lpg);
 	void loadTextureShield(char * fName);
 	void loadTextureSphere(char * fName);
+	void calCgVelocity2(double dt);
 };

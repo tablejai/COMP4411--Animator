@@ -29,12 +29,28 @@ LegPhysics::LegPhysics(int x, int y, int z, float r, float L, char* label) :Comp
 void LegPhysics::gravity(double dt) {
 //	c//out << "ypos" << y << "<" << dt << "<" << gF << "<" << motion[1] << endl;
 	motion[1] -= dt / 1000.0 * gF;
-	if ((startpoint[1] <= floory || endpoint[1]<=floory)&&motion[1]<0) {
-		motion[1] =0.001;
+	if ((startpoint[1] <= floory )&&motion[1]<0) {
+		if (parent == nullptr )
+			motion[1] = 0.0001;
 		return;
 	}
-	
+	if ((endpoint[1] <= floory) && motion[1]<0) {
+		if (parent == nullptr)
+			motion[1] = 0.01;
+		return;
+	}
 
+}
+void LegPhysics::standUpWhenFall() {
+	//if (parent==nullptr&& (startpoint[1] <= floory || endpoint[1] <= floory)) {
+		if (startpoint[1] > endpoint[1]&& endpoint[2]<startpoint[2]) {
+			torque += 4;
+		}
+		if (startpoint[1] > endpoint[1] && endpoint[2]>startpoint[2]) {
+			torque -= 4;
+		}
+	//}
+	
 }
 void LegPhysics::pointsToPlot(Vec3f start, Vec3f end) {
 	x = start[0];
@@ -59,7 +75,7 @@ void LegPhysics::pointsToPlot(Vec3f start, Vec3f end) {
 Vec3f LegPhysics::collisionStartWithFloor(Vec3f netforce) {
 	Vec3f force = { 0,0,0 };
 	force[1] = mass*0.4;
-	if (startpoint[1]<=floory) {
+	if (startpoint[1]<=floory+0.01) {
 		netforce[1] -= force[1];
 		torque += (double)force[1] * sin(TORADIAN(90-thetax));
 		if (parent == nullptr)

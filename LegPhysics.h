@@ -53,6 +53,7 @@ struct LegPhysics : public Component
 	Vec3f collisionEndWithFloor(Vec3f netforce);
 	Vec3f torquefromParent(Vec3f netforce);
 	Vec3f balancedTorque(Vec3f netforce,float theta);
+	void standUpWhenFall();
 
 	void balancedtorque();
 	void pointsToPlot(Vec3f, Vec3f);
