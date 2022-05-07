@@ -1,6 +1,0 @@
-﻿  Rigid.cpp
-d:\comp4411-animator\modelerglobals.h(88): warning C4018: '<': signed/unsigned mismatch
-d:\comp4411-animator\modelerglobals.h(90): warning C4018: '>=': signed/unsigned mismatch
-d:\comp4411-animator\rigid.h(53): warning C4305: 'initializing': truncation from 'double' to 'float'
-d:\comp4411-animator\rigid.cpp(43): warning C4715: 'Rigid::collisionDetect': not all control paths return a value
-  Animator.vcxproj -> D:\COMP4411-Animator\.\Release\modeler.exe
