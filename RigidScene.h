@@ -1,5 +1,6 @@
 #pragma once
 #pragma once
+#pragma once
 #include "Ground.h"
 #include "modelerview.h"
 #include "modelerapp.h"
@@ -34,32 +35,28 @@
 #include <chrono>
 #include "LegPhysics.h"
 using namespace std::chrono;
+#include "Rigid.h"
 #include "Tentacle.h"
-struct Rigid :Component
+struct RigidScene:Component
 {
 	//Rigid(int x, int y, int z, int w, int l, int h, ModelerView* view);
-	Rigid(float x, float y, float z, float r, string shape, ModelerView* view);
+	RigidScene(int x, int y, int z, ModelerView* view);
 
 	//Rigid(int x, int y, int w, int h, char* label);
-
+	bool simulate;
 	ModelerView* view;
-	bool project;
-	bool project2;
-	float mass ;
-	//body parts
-
-	float radius ; //for sphere
-	vector<Vec3f> points;
+	float floory;
+	vector<Rigid*> bodies;
 	float gf = 0.1;
-	Vec3f netforce;
-	Vec3f velocity;
-	Vec3f acc;
-	bool collisionDetect( Rigid r2);
-	Vec3f collideForce( Rigid r2);
+	bool collisionDetect();
+	milliseconds prevTime;
+	Vec3f collideForce();
 	void updateBody();
 	void gravity();
-	string shape;
+	void addbody(Rigid*rg) ;
+	Ground *grd;
+
 	virtual void draw();
-	void setup();
-	
+	//void setup();
+
 };

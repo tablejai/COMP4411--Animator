@@ -28,7 +28,7 @@ LegPhysics::LegPhysics(int x, int y, int z, float r, float L, char* label) :Comp
 }
 void LegPhysics::gravity(double dt) {
 //	c//out << "ypos" << y << "<" << dt << "<" << gF << "<" << motion[1] << endl;
-	motion[1] -= dt / 1000.0 * gF;
+	motion[1] -= dt / 1000.0 * gF*1.3;
 	if ((startpoint[1] <= floory )&&motion[1]<0) {
 		if (parent == nullptr )
 			motion[1] = 0.0001;
@@ -145,7 +145,7 @@ void LegPhysics::updateRotation(double dt) {
 }
 void LegPhysics::updateMotion(double dt) {
 	x += motion[0];
-	y += (min(motion[1],0.023));
+	y += (min(motion[1],0.024));
 	z += motion[2];
 }
 Vec3f LegPhysics::balancedTorque(Vec3f netforce,float theta) {

@@ -204,13 +204,13 @@ void BallBat::jumpAction(LegPhysics*lpin,LegPhysics*lping) {
 		//lpin->targetuplift = lpin->targetuplift+3;
 		//lping->targetuplift = lping->targetuplift + 30;
 	}
-	 else if (!jumped) {
-		 cout << "jping" << endl;
+	 else  {
+	//	 cout << "jping" << endl;
 
 		 if (lpin->collideFloor) {
-			 if (lpin->thetax >= -45)
-				 lpin->torque -= 90;
-				 lping->torque += 101.6f;
+			 if (lpin->thetax >= -30)
+				 lpin->torque -= 100;
+				 lping->torque += 300;
 			 lpin->targetuplift = min(lpin->targetuplift + 10, 90);
 			 lping->targetuplift = min(lping->targetuplift + 10, 90);
 
@@ -236,6 +236,8 @@ void BallBat::porjection(LegPhysics*lp, LegPhysics*lpg,double dt) {
 	project = true;
 	cg = cg + v * dt;
 	//lp->motion[0] = v[0] * dt;
+	//lp->motion[2] = v[2] * dt;
+
 	lp->motion[1] = v[1] * dt;
 	//lp->motion[2] = v[2] * dt;
 //	cout << lp->motion[1] <<"thev"<< v[1]<< endl;
@@ -245,7 +247,7 @@ void BallBat::porjection(LegPhysics*lp, LegPhysics*lpg,double dt) {
 void BallBat::projection2( double dt) {
 	project2 = true;
 	cg2= cg2 + v2 * dt;
-	//lp->motion[0] = v[0] * dt;
+	//lp2->motion[2] = v[2] * dt;
 	lp2->motion[1] = v2[1] * dt;
 }
 void BallBat::airMotion(LegPhysics*lp, LegPhysics*lpg,double dt) {
@@ -337,13 +339,14 @@ void BallBat::draw()
 	//cout << "dd1" << lp->collideFloor << endl;
 	if(lp->collideFloor)
 	calCgVelocity(dt.count() / 1000.0);
-	if ((lp->collideFloor||lp->thetax>0) && project) {
+	if (!lp->collideFloor&&project) {
+		airMotion(lp, lpg, dt.count() / 1000.0f);
+	}
+	if ((lp->collideFloor||lp->thetax>0)&&lp->motion[1]<0 && project) {
 		endproject(lp,lpg);
 	}
 	else {
-		if (!lp->collideFloor&&project) {
-			airMotion(lp, lpg,dt.count() / 1000.0f);
-		}
+		
 		if (abs(lp->omegaX) < 0.016 &&lp->collideFloor&&view->jump ) {
 			porjection(lp, lpg,dt.count() / 1000.0);
 			//jumped = true;
@@ -354,13 +357,14 @@ void BallBat::draw()
 
 	if (lp2->collideFloor)
 		calCgVelocity2(dt.count() / 1000.0);
-	if ((lp2->collideFloor || lp2->thetax>0) && project2) {
+	if (!lp2->collideFloor&&project2) {
+		airMotion(lp2, lpg2, dt.count() / 1000.0f);
+	}
+	if ((lp2->collideFloor || lp2->thetax>0) && lp2->motion[1]<=0 && project2) {
 			endproject(lp2, lpg2);
 		}
 		else {
-			if (!lp2->collideFloor&&project2) {
-				airMotion(lp2, lpg2, dt.count() / 1000.0f);
-			}
+			
 			if (abs(lp2->omegaX) < 0.016 &&lp2->collideFloor&&view->jump) {
 				projection2( dt.count() / 1000.0);
 				//jumped = true;

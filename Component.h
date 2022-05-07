@@ -7,6 +7,8 @@ typedef enum {
 	HEAD,
 	METABALL,
 	LEGP,
+	RIGID,
+	RIGIDSCENE_,
 	NUMTYPE
 }Type;
 struct Component {
