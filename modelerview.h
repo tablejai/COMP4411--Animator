@@ -23,7 +23,7 @@ class ModelerView : public Fl_Gl_Window
 {
 public:
 	//ModelerUI * mui;
-
+	bool simulate;
     ModelerView(int x, int y, int w, int h, char *label=0);
 	static void callback1(void*);
 	virtual ~ModelerView();

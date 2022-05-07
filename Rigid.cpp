@@ -44,7 +44,7 @@ bool Rigid::collisionDetect( Rigid r2) {
 
 
 Vec3f Rigid::collideForce(Rigid r2) {
-	const double force = 1;
+	const double force =2;
 	Vec3f net = { 0,0,0 };
 	for (Vec3f pt : this->points) {
 		for (Vec3f pt2 : r2.points)

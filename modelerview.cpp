@@ -46,6 +46,7 @@ int ModelerView::keyhandler(int event) {
 ModelerView::ModelerView(int x, int y, int w, int h, char *label)
 : Fl_Gl_Window(x,y,w,h,label), t(0), save_bmp(false) 
 {
+	simulate = false;
 	m_ctrl_camera = new Camera();
 	m_curve_camera = new Camera();
 	prevTime = milliseconds(0);

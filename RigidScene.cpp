@@ -6,11 +6,11 @@ RigidScene::RigidScene(int x, int y, int z, ModelerView* view) :Component(RIGIDS
 	this-> y = y;
 	this->z = z;
 	this->floory = -6;
+	this->view = view;
 	prevTime = duration_cast< milliseconds >(
 		system_clock::now().time_since_epoch()
 		);
 	grd = new Ground(x - 40, floory, z - 40, 80, 0.01, 80, view);
-	simulate = true;
 }
 
 void RigidScene::addbody(Rigid*rg) {
@@ -24,6 +24,7 @@ static GLfloat lightDiffuse0[] = { 1,1,1,1 };
 
 void RigidScene::draw() {
 	//cal Force
+	simulate = view->simulate;
 	milliseconds ms = duration_cast< milliseconds >(
 		system_clock::now().time_since_epoch()
 		);
