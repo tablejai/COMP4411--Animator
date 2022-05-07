@@ -271,6 +271,7 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="Rigid.cpp" />
     <ClCompile Include="Spider.cpp" />
     <ClCompile Include="SpiderModel.cpp" />
     <ClCompile Include="Tentacle.cpp" />
@@ -305,6 +306,7 @@
     <ClInclude Include="indicatorwindow.h" />
     <ClInclude Include="modelerapp.h" />
     <ClInclude Include="rect.h" />
+    <ClInclude Include="Rigid.h" />
     <ClInclude Include="rulerwindow.h" />
     <ClInclude Include="mat.h" />
     <ClInclude Include="Spider.h" />
