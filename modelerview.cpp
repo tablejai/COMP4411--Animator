@@ -21,6 +21,28 @@ static const int	kMouseZoomButton				= FL_RIGHT_MOUSE;
 static const char *bmp_name = NULL;
 static int countNum = 0;
 static ModelerView* currModel;
+int ModelerView::keyhandler(int event) {
+	if (event == FL_SHORTCUT) {
+		if (Fl::event_key() == FL_Up) {
+			currModel->leanf = true;
+			//currModel->leanf;
+			cout << "detected key Up" << endl;
+			return 1; // to indicate we used the key event
+		}  // here you can test for other keys, as wanted
+		if (Fl::event_key() == FL_Down){
+			currModel->leanb = true;
+			currModel->jump = true;
+		}
+		if (Fl::event_key() == ' ') {
+			currModel->jump = true;
+			cout << "detected key space " << endl;
+				//return 1; // to indicate we used the key event
+			return 1;
+		}
+	}
+	
+	return 0;  // we had no interest in the event
+}
 ModelerView::ModelerView(int x, int y, int w, int h, char *label)
 : Fl_Gl_Window(x,y,w,h,label), t(0), save_bmp(false) 
 {
@@ -31,7 +53,7 @@ ModelerView::ModelerView(int x, int y, int w, int h, char *label)
 	camera(CURVE_MODE);
 	callback1(nullptr);
 	currModel = this;
-
+	Fl::add_handler(keyhandler);
 
 }
 
@@ -53,29 +75,42 @@ int ModelerView::handle(int event)
 	unsigned eventCoordY = Fl::event_y();
 	unsigned eventButton = Fl::event_button();
 	unsigned eventState  = Fl::event_state();
+	
 
 	switch(event)	 
 	{
-	case FL_KEYDOWN: {
-		//if(mui!=nullptr)
-	//	mui->animate(true);
-		jump = true;
-		redraw();
-		break;
-	}
+	case FL_Down:
 	case FL_KEYUP: {
-		//if(mui!=nullptr)
-		//	mui->animate(true);
-		jump = false;
-		redraw();
+		//cout << "cliecked" << endl;
 
-		break;
+		if (Fl::event_key() == FL_Up) {
+			//currModel->leanf;
+			leanf = false;
+			cout << "detected key Up is released" << endl;
+			//return 1; // to indicate we used the key event
+		}  // here you can test for other keys, as wanted
+		if (Fl::event_key() == FL_Down) {
+			//currModel->leanf;
+			jump = false;
+			leanb = false;
+			cout << "detected key Up is released" << endl;
+			//return 1; // to indicate we used the key event
+		}  // here you can test for other keys, as wanted
+		if (Fl::event_key() == ' ') {
+			jump = false;
+			cout << "detected key space is released" << endl;
+			//return 1; // to indicate we used the key event
+		}
 	}
+	break;
 	case FL_PUSH:
 		{
+	//	cout << "cliecked" << endl;
+
 			switch(eventButton)
 			{
 			case kMouseRotationButton:
+
 				if (!Fl::event_state(FL_ALT)) {
 					m_camera->clickMouse(kActionRotate, eventCoordX, eventCoordY );
 					break;
@@ -86,6 +121,7 @@ int ModelerView::handle(int event)
 			case kMouseZoomButton:
 				m_camera->clickMouse(kActionZoom, eventCoordX, eventCoordY );
 				break;
+			 
 			}
            // printf("push %d %d\n", eventCoordX, eventCoordY);
 		}

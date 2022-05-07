@@ -23,6 +23,7 @@ struct BallBat :Component
 	//BallBat(int x, int y, int w, int h, char* label);
 
 	ModelerView* view;
+	bool project;
 	//body parts
 	int w;
 	int h;
@@ -46,8 +47,22 @@ struct BallBat :Component
 	Ground *grd;
 	LegPhysics*lp;
 	LegPhysics*lpg;
-
+	LegPhysics*lpg2;
+	Vec3f cg;
+	Vec3f prevCg;
+	Vec3f v;
+	bool jumped;
+	bool leanded;
 	milliseconds prevTime;
+	void calCgVelocity(double dt);
+	void jumpAction();
+	void leanforward();
+	void leanStraight();
+	void porjection(double dt);
+	void endproject( );
+	void airMotion(double dt);
+	void leanbackward();
+	void gravity(double dt);
 	virtual void draw();
 	void setup();
 	void loadTextureShield(char * fName);

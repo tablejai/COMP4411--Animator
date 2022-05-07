@@ -30,6 +30,8 @@ public:
     virtual int handle(int event);
     virtual void draw();
 	bool jump;
+	bool leanf;
+	bool leanb;
 	void setBMP(const char *fname);
 	void saveBMP(const char* szFileName);
 	void endDraw();
@@ -39,6 +41,8 @@ public:
 	Camera *m_ctrl_camera;
 	Camera *m_curve_camera;
 	milliseconds prevTime;
+	static int keyhandler(int event);
+
 	double prevy;
 	
 	

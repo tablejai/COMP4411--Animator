@@ -30,7 +30,9 @@ struct LegPhysics : public Component
 	float RI;//rotational intertia
 	float omegaAcc;
 	double torque;
-	
+	float kp ;
+	float kd;
+	float targetuplift;
 	LegPhysics(int x, int y, int z, float r, float L, char* label);
 	Hand* hand;
 	Vec3f motion;
@@ -44,11 +46,13 @@ struct LegPhysics : public Component
 	void updateRI();
 	void updateRotation();
 	LegPhysics* nextleg;
+	bool collideFloor = false;
+	void updateMotion(double dt);
 	void updateRotation(double dt);
 	Vec3f collisionStartWithFloor(Vec3f netforce);
 	Vec3f collisionEndWithFloor(Vec3f netforce);
 	Vec3f torquefromParent(Vec3f netforce);
-	Vec3f balancedTorque(Vec3f netforce);
+	Vec3f balancedTorque(Vec3f netforce,float theta);
 
 	void balancedtorque();
 	void pointsToPlot(Vec3f, Vec3f);

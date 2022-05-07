@@ -10,6 +10,7 @@ LegPhysics::LegPhysics(int x, int y, int z, float r, float L, char* label) :Comp
 	this->z = z;
 	this->radius = r;
 	this->length = L;
+	
 	parent = nullptr;
 	nextleg = nullptr;
 	xoffset = 0;//for debug mainly
@@ -23,16 +24,16 @@ LegPhysics::LegPhysics(int x, int y, int z, float r, float L, char* label) :Comp
 	thetazOff = 0;
 	torque = 0;
 	omegaX = 0;
+	targetuplift = 0;
 }
 void LegPhysics::gravity(double dt) {
-	//cout << "ypos" << y << "<" << dt << "<" << gF << "<" << motion[2] << endl;
-	motion[2] -= dt / 1000.0 * gF;
-	if (startpoint[1] <= floory || endpoint[1]<=floory) {
-		motion[2] = 0;
+//	c//out << "ypos" << y << "<" << dt << "<" << gF << "<" << motion[1] << endl;
+	motion[1] -= dt / 1000.0 * gF;
+	if ((startpoint[1] <= floory || endpoint[1]<=floory)&&motion[1]<0) {
+		motion[1] =0.001;
 		return;
 	}
 	
-	y += motion[2];
 
 }
 void LegPhysics::pointsToPlot(Vec3f start, Vec3f end) {
@@ -61,9 +62,12 @@ Vec3f LegPhysics::collisionStartWithFloor(Vec3f netforce) {
 	if (startpoint[1]<=floory) {
 		netforce[1] -= force[1];
 		torque += (double)force[1] * sin(TORADIAN(90-thetax));
-
+		if (parent == nullptr)
+			netforce = balancedTorque(netforce, targetuplift);
+		collideFloor = true;
+		return netforce;
 	}
-
+	collideFloor = false;
 	return netforce;
 }
 Vec3f LegPhysics::collisionEndWithFloor(Vec3f netforce) {
@@ -80,66 +84,74 @@ Vec3f LegPhysics::torquefromParent(Vec3f netforce) {
 	force[1] = mass*0.1;
 	netforce[1] += force[1];
 	torque += (double)force[1] * sin(TORADIAN(90 - thetax));
-	cout << torque << "torque2" << endl;
+	//cout << torque << "torque2" << endl;
 return netforce;
 }
 void LegPhysics::updateRI() {
 	RI = (1 / 3.0)*mass*length*length;
-	cout << "RI:<<" << RI << endl;
+	//cout << "RI:<<" << RI << endl;
 }
 void LegPhysics::updateRotation(double dt) {
 	updateRI();
 	omegaAcc = torque/RI;
-	cout << omegaAcc << endl;
-	double thetachange = TODEGREE( omegaX + dt / 1000.0 * (omegaAcc));
+//	cout << omegaAcc << endl;
+	double thetachange = max(min(TODEGREE( omegaX + dt / 1000.0 * (omegaAcc)),4),-4);
 
 
-	cout << thetachange << endl;
+	//cout << thetachange << endl;
 	double theta =thetax+ thetachange;
-	
+	/*if (parent == nullptr) {
+		if (theta < -90) {
+			return;
+		}
+	}
+	else {
+		if (theta > -40) {
+			return;
+		}
+	}*/
 	if (endpoint[1]>floory) {
 
 		thetax += thetachange;
 		omegaX += dt / 1000.0 * omegaAcc;
 	}
 	else {
-		//Vec3f end = { x, (float)(y - length * sin(TORADIAN(theta))), (float)(z + length * cos(TORADIAN(theta))) };
-		//cout << end[1] << endl;
-		//if (end[1]>floory) {
-		//	thetax += thetachange;
-		//	omegaX += dt / 1000.0 * omegaAcc;
-		//}
-		endpoint[1] = floory;
-		pointsToPlot(startpoint, endpoint);
+		Vec3f end = { x, (float)(y - length * sin(TORADIAN(theta))), (float)(z + length * cos(TORADIAN(theta))) };
+		cout << end[1] << endl;
+		if (end[1]>endpoint[1]) {
+			thetax += thetachange;
+			omegaX += dt / 1000.0 * omegaAcc;
+		}
+//		pointsToPlot(startpoint, endpoint);
 
 	}
-	//if (thetax < -90) {
-	//	thetax = -89;
-	//}
-}
 
-Vec3f LegPhysics::balancedTorque(Vec3f netforce) {
-	double targetheight = startpoint[1]+length * sin(TORADIAN(60.0f)); //for standing
+}
+void LegPhysics::updateMotion(double dt) {
+	x += motion[0];
+	y += (min(motion[1],0.023));
+	z += motion[2];
+}
+Vec3f LegPhysics::balancedTorque(Vec3f netforce,float theta) {
+	double targetheight = startpoint[1]+length * sin(TORADIAN(theta)); //for standing
 	double diffy = targetheight-endpoint[1] ;
-	Vec3f force = { 0.0f, (float)(diffy*8.0f *mass + TODEGREE(omegaX)*80), 0.0f }; //pid physics brah
+	//1.1.8f 50f
+	int sign = 1;
+	if (thetax < -90)
+		sign = -1;
+	Vec3f force = { 0.0f, (float)(diffy*kp*mass+ sign*omegaX*kd), 0.0f }; //pid physics brah//ok nice num
 	netforce[1] += force[1];
 	if (thetax<-90)
-	torque += (double)force[1] * sin(TORADIAN(90 - thetax));
+		torque -= (double)force[1] * sin(TORADIAN(90 - thetax));
 	else
 		torque -= (double)force[1] * sin(TORADIAN(90 - thetax));
 
-	/*if (torque < -4) {
-		torque = -4;
-	}*/
-	//cout << "diffy:" << diffy << endl;
-	//cout << "torque:" << torque << endl;
 
 	return netforce;
 }
 void LegPhysics::draw()
 {
-	netforce = { 0,0,0 };
-	torque = 0;
+
 	if (parent == nullptr) {
 		startpoint = { x,y,z };
 
@@ -149,14 +161,16 @@ void LegPhysics::draw()
 		x = startpoint[0];
 		y = startpoint[1];
 		z = startpoint[2];
-		netforce = torquefromParent(netforce);
+		netforce = balancedTorque(netforce,targetuplift);
 
-		//cout <<y<<','<<z<<","<< endpoint [1]<<","<<endpoint[2] << endl;
 
 	}
 
 	netforce = collisionStartWithFloor(netforce);
 	netforce = collisionEndWithFloor(netforce);
+	
+	
+
 	if(thetax<-90)
 	endpoint = { x,(float)(y-length*sin(TORADIAN(thetax))),(float)(z+ length*cos(TORADIAN(thetax)))};
 	else
